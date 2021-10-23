@@ -15,3 +15,57 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Synopsis
 
+Completed as the course project for JHU's Regression Models course. The assignment is as follows:
+
+*You work for Motor Trend, a magazine about the automobile industry. Looking at a data set of a collection of cars, they are interested in exploring the relationship between a set of variables and miles per gallon (MPG) (outcome). They are particularly interested in the following two questions:*
+
+*1. Is an automatic or manual transmission better for MPG?*
+*2. Quantify the MPG difference between automatic and manual transmissions.*
+
+You can read more about the mtcars dataset [here.](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/mtcars.html)
+
+# Setup
+
+```{r}
+## Load packages
+library(tidyverse)
+library(ggplot2)
+```
+
+# Data Processing
+
+Let's take a quick look at the dataset we'll be using for the analysis, mtcars.
+
+```{r}
+## Load dataset
+data(mtcars) 
+
+## Take a look at dimensions, etc.
+head(mtcars, 3)
+dim(mtcars)
+map(mtcars, class)
+```
+
+The dataset has 11 columns and 32 rows, a somewhat small sample size. All of the variables are coded as numeric variables, when in reality, quite a few of them are factor variables. Let's fix that.
+
+```{r}
+## Change appropriate variables to factor class
+mtcars <- mtcars %>% 
+        mutate(across(c(cyl, vs, am, gear, carb), ~ as.factor(.)))
+```
+
+# Exploratory Data Analysis
+
+Let's plot miles per gallon by transmission type and see if there's a noticeable difference between manual and automatic transmissions.
+
+```{r}
+## Miles Per Gallon by Transmission Type
+mtcars %>% ggplot(aes(x = am, y = mpg, fill = am)) +
+        ggthemes::scale_fill_tableau() +
+        geom_boxplot(show.legend = FALSE) +
+        geom_point(show.legend = FALSE) +
+        labs(x = "Transmission Type", y = "Miles Per Gallon") +
+        ggtitle("Miles Per Gallon by Transmission Type") +
+        scale_x_discrete(labels = c("Automatic", "Manual"))
+        theme_bw() 
+```
