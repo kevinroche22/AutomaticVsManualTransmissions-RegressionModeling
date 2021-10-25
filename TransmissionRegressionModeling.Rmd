@@ -117,7 +117,7 @@ In this model, the coefficient on the dummy variable for transmission type is in
 
 # Residual Plot
 
-```{r}
+```{r, echo=FALSE,warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='all'}
 ## Plot residuals
 multipleRegressionModel %>% 
         ggplot(aes(y = multipleRegressionModel$residuals, x = multipleRegressionModel$fitted.values)) +
