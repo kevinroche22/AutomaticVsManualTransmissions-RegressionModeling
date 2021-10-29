@@ -1,0 +1,153 @@
+---
+title: Determining The Effect Of Transmission Types On Miles Per Gallon Using The MTCARS Dataset
+author: "Kevin Roche"
+date: "28/10/2021"
+output: 
+        ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+## Load packages
+library(tidyverse)
+library(plotly)
+```
+
+## Synopsis
+
+Completed as the course project for JHU's Regression Models course. The assignment is as follows:
+
+**You work for Motor Trend, a magazine about the automobile industry. Looking at a data set of a collection of cars, they are interested in exploring the relationship between a set of variables and miles per gallon (MPG) (outcome). They are particularly interested in the following two questions:**
+
+**1. Is an automatic or manual transmission better for MPG?**
+
+**2. Quantify the MPG difference between automatic and manual transmissions.**
+
+## Executive Summary
+
+This analysis arrives at the following conclusions after conducting multiple regression analysis:
+
+1. We cannot say whether an automatic or manual transmission is better for mpg, as the coefficient on the mpg variable is insignificant.
+2. We cannot (accurately) quantify the difference in mpg between the two transmission types, again because the coefficient on the mpg variable is insignificant. 
+
+## Data Processing
+
+All of the variables were coded as numeric variables, when in reality, quite a few of them were factor variables - so their classes had to be changed accordingly.
+
+```{r, echo = TRUE}
+## Change appropriate variables to factor class
+mtcars <- within(mtcars, {
+   vs <- factor(vs, labels = c("V-Shaped", "Straight"))
+   am <- factor(am, labels = c("Automatic", "Manual"))
+   cyl  <- ordered(cyl)
+   gear <- ordered(gear)
+   carb <- ordered(carb)
+})
+```
+
+## Exploratory Data Analysis
+
+Here we plot miles per gallon by transmission type to see if there's a noticeable difference between manual and automatic transmissions. It appears manual cars get better mpg than automatic.
+
+```{r, fig.align='center', message = FALSE, fig.height = 3.7}
+## Miles Per Gallon by Transmission Type
+ggplotly(mtcars %>% ggplot(aes(x = am, y = mpg, fill = am)) +
+        ggthemes::scale_fill_tableau() +
+        geom_boxplot(show.legend = FALSE) +
+        geom_point(show.legend = FALSE) +
+        labs(x = "Transmission Type", y = "Miles Per Gallon") +
+        ggtitle("Miles Per Gallon by Transmission Type") +
+        scale_x_discrete(labels = c("Automatic", "Manual")) +
+        theme_bw())
+```
+
+## Simple Regression Analysis I
+
+First, we started by running a simple OLS regression without controlling for other factors in the dataset.
+
+```{r, fig.height = 6}
+## Simple regression model
+simpleModel <- lm(mpg ~ am, mtcars) 
+simpleModel %>% 
+        broom::tidy() %>% 
+        knitr::kable(caption = "Single Regression Model",
+                     col.names = c("Predictor", "B", "SE", "t", "p"),
+                     digits = c(0, 2, 2, 2, 3),
+                     align = c("l", "r", "r", "r", "r"))
+```
+
+## Simple Regression Analysis II 
+
+The simple regression model finds that cars with manual transmissions get an average of 7.245 more miles per gallon than cars with automatic transmissions. This is, of course, the difference in means we just saw visualized in the exploratory data analysis section. 
+
+This result is significant at the 0.01% level. However, the R^2^ is only 0.3598, meaning that only ~36% of the variance in miles per gallon is explained by the transmission type.
+
+This simple regression could be (and is likely) suffering from omitted variable bias. To address this bias, we'll include other variables from the dataset which may have an effect on the miles per gallon that a given car gets. 
+
+## Analysis Of Variance I 
+
+In an effort to determine which variables we'll add to the regression, we'll perform an analysis of variance (ANOVA) test to see which variables have significant effects on the variance of the mpg variable.
+
+According to the ANOVA test, the number of cylinders, the displacement, and the weight of the vehicle all explain a significant amount of the variance in the mpg variable. 
+
+## Analysis Of Variance II
+
+```{r, fig.height = 2}
+## Analysis of variance test
+mpgVarianceAnalysis <- aov(mpg ~ ., mtcars)
+mpgVarianceAnalysis %>% 
+        broom::tidy() %>% 
+        knitr::kable(caption = "ANOVA Test",
+                     col.names = c("Var", "df", "sumsq", "meansq", "F-stat", "p"),
+                     digits = c(0, 1, 2, 2, 2, 2),
+                     align = c("l", "r", "r", "r", "r", "r"))
+```
+
+## Multiple Regression Analysis I
+
+The multiple regression model has an R^2^ of 0.8376, suggesting that the model explains ~84% of the variance in the mpg variable - a significant improvement on the simple model.
+
+In this model, the coefficient on the dummy variable for transmission type is insignificant - indicating that the simple model suffered from omitted variable bias. In other words, the multiple regression model finds that the transmission type does not have a statistically significant effect on miles per gallon.
+
+## Multiple Regression Analysis II
+
+```{r, fig.height = 4}
+## Multiple regression model
+multipleRegressionModel <- lm(mpg ~ am + cyl + disp + wt, mtcars)
+multipleRegressionModel %>% 
+        broom::tidy() %>% 
+        knitr::kable(caption = "Multiple Regression Model",
+                     col.names = c("Predictor", "B", "SE", "t", "p"),
+                     digits = c(0, 2, 2, 2, 3),
+                     align = c("l", "r", "r", "r", "r"))
+```
+
+## Residual Analysis I
+
+The residual plot has no clear pattern, implying the multiple regression model fits the data well - but if we're nitpicking, there are a few (minor) causes for concern:
+
+1. There's some imbalance in the y-axis. Positive residuals were nearly as large as 6, but negative residuals weren't larger than -3.5.
+2. The residuals appear to get (marginally) larger as the prediction goes from small to large, implying there may be heteroskedasticity.
+
+In this case, these causes for concern are so minor that they're not worth acting upon. They've only been pointed out to demonstrate some understanding of how to analyze a residual plot.
+
+## Residual Analysis II
+
+```{r, fig.align='center', message = FALSE}
+## Plot residuals
+ggplotly(multipleRegressionModel %>% 
+        ggplot(aes(y = multipleRegressionModel$residuals, x = multipleRegressionModel$fitted.values)) +
+        geom_point() +
+        geom_smooth(method = "lm", se = FALSE) +
+        labs(y = "Residuals", x = "Fitted Values") + 
+        ggtitle("Residual Plot") +
+        theme_bw())
+```
+
+## Conclusion
+
+The coefficient on the transmission variable is not statistically significant once we control for other factors that affect miles per gallon, such as the weight of the car and the number of cylinders.
+
+As a result, we cannot say whether an automatic or manual transmission is better for mpg, and we cannot quantify the difference in mpg between the two transmission types with any confidence.
+
+It's worth noting that it's not difficult to "p-hack" this model with a combination of regressors that indicates that transmission type has a significant effect on miles per gallon. In reality, the transmission type likely has *some* sort of effect on miles per gallon, but neither the model I've constructed here nor a model that uses all of the regressors (not included in analysis) show a statistically significant effect.
