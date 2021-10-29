@@ -1,5 +1,6 @@
 ---
-title: "Determining The Effect Of Transmission Types On Miles Per Gallon Using The MTCARS Dataset"
+title: Determining The Effect Of Transmission Types On Miles Per Gallon Using The
+  MTCARS Dataset
 author: "Kevin Roche"
 date: "22/10/2021"
 output:
@@ -111,7 +112,7 @@ multipleRegressionModel <- lm(mpg ~ am + cyl + disp + wt, mtcars)
 summary(multipleRegressionModel)
 ```
 
-This model has an R^2 of 0.8376, suggesting that the model explain ~84% of the variance in the mpg variable - a significant improvement on the simple model.
+This model has an R^2 of 0.8376, suggesting that the model explains ~84% of the variance in the mpg variable - a significant improvement on the simple model.
 
 In this model, the coefficient on the dummy variable for transmission type is insignificant - indicating that the simple model suffered from omitted variable bias. In other words, the multiple regression model finds that the transmission type does not have a statistically significant effect on miles per gallon.
 
