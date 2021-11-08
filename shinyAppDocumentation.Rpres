@@ -1,0 +1,41 @@
+Predicting MPG using the MTCARS dataset: A Shiny App
+========================================================
+author: Kevin Roche
+date: 
+autosize: true
+
+Overview
+========================================================
+
+This presentation was developed in Shiny as part of JHU's Developing Data Products course.
+
+The application takes details about a users car (namely - transmission type, number of cylinders, displacement and weight) and uses them to predict how many miles per gallon the car will get
+
+You can view the Shiny application that this presentation is pitching [here,]() and you can view the source code for this project on my [github.](https://github.com/kevinroche22/AutomaticVsManualTransmissions-RegressionModeling)
+
+Application Functionality
+========================================================
+
+On the sidebar, users enter the specifications of their car. The app then returns how many miles per gallon the model predicts their car will get. The specifications come in the following format:
+
+- Transmission type (Drop-down menu)
+- Number of cylinders (Radio buttons)
+- Displacement (Slider)
+- Vehicle weight (Slider)
+
+Application Backend
+========================================================
+
+The app uses the **`shinydashboard`** package because I feel it provides a more aesthetic look to the application.
+
+- Users input their specifications in the sidebar panel.
+- Their choices and the model prediction are then returned in the main panel.
+- The server side of things uses the renderText function to return the users inputs to them and run the linear model.
+
+Note from the author
+========================================================
+This application builds off the data [analysis](https://rpubs.com/kevinroche22/TransmissionEffectsAnalysis) done for JHU's regression models course.
+
+The purpose of that assignment was to teach students about coefficient interpretation, and the end result was that the independent variables used in the analysis were insignificant predictors of mpg.
+
+In practice, the linear model built for that project would never be used in a production setting - but the goal here was to learn how to build a Shiny app, so I wasn't concerned about the legitimacy of the prediction.

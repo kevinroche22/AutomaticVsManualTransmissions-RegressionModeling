@@ -1,0 +1,13 @@
+name: mpgPredictionShinyApp
+title: mpgPredictionShinyApp
+username:
+account: kevinroche22
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5070473
+bundleId: 5227866
+url: https://kevinroche22.shinyapps.io/mpgPredictionShinyApp/
+when: 1636388665.73001
+lastSyncTime: 1636388665.73003
+asMultiple: FALSE
+asStatic: FALSE
