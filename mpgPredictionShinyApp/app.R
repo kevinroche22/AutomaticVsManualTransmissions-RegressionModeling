@@ -66,6 +66,11 @@ ui <- dashboardPage(
         dashboardBody(h1(tags$b('Prediction Results'), ## Main title, tags make it bold
                          align = "center",
                          div(style="height:40px")),
+                      fluidRow(
+                              p(tags$i("Enter your specifications in the sidebar, and the app will return how many miles per gallon it predicts your car will get above."),
+                                align = "center",
+                                width = 12,
+                                div(style="height:30px"))),
                       h3(tags$b('Specifications'), ## Reiterates selections to user, bold
                          align = "center",
                          div(style = "height:30px")),
