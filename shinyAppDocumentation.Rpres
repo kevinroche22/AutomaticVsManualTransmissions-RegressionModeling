@@ -11,7 +11,7 @@ This presentation was developed in Shiny as part of JHU's Developing Data Produc
 
 The application takes details about a users car (namely - transmission type, number of cylinders, displacement and weight) and uses them to predict how many miles per gallon the car will get
 
-You can view the Shiny application that this presentation is pitching [here,]() and you can view the source code for this project on my [github.](https://github.com/kevinroche22/AutomaticVsManualTransmissions-RegressionModeling)
+You can view the Shiny application that this presentation is pitching [here,](https://kevinroche22.shinyapps.io/mpgPredictionShinyApp/) and you can view the source code for this project on my [github.](https://github.com/kevinroche22/AutomaticVsManualTransmissions-RegressionModeling)
 
 Application Functionality
 ========================================================
