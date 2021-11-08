@@ -31,6 +31,8 @@ The app uses the **`shinydashboard`** package because I feel it provides a more 
 - Users input their specifications in the sidebar panel.
 - Their choices and the model prediction are then returned in the main panel.
 - The server side of things uses the renderText function to return the users inputs to them and run the linear model.
+- The linear model is defined as follows:  
+  `lm(mpg ~ am + cyl + disp + wt, data = mtcars)`
 
 Note from the author
 ========================================================
